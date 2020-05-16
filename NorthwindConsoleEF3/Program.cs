@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NorthwindConsoleEF3.Modelos;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using static System.Console;
 
@@ -11,18 +13,8 @@ namespace NorthwindConsoleEF3
     {
         static void Main(string[] args)
         {
-            ListarProdutos();
-            WriteLine("");
-            WriteLine("");
-
-            if(AdicionarProduto("Geladeira Brastemp 270L", 1499M, 2))
-            {
-                WriteLine("Produto adicionado com sucesso!");
-            }
-
-            WriteLine("");
-            WriteLine("");
-            ListarProdutos();
+            int affected = ExcluirProdutos("Geladeira");
+            WriteLine("{0} produtos excluídos.", affected);
 
         }
 
@@ -94,5 +86,35 @@ namespace NorthwindConsoleEF3
                 WriteLine("{0:000} {1,-40} {2,10:R$#,##0.00} {3:00000} {4}", p.ProdutoId, p.Nome, p.Preco, p.Estoque, p.Descontinuado);
             }
         }
+
+        private static bool AjustarPrecoProduto(string nome, decimal valor)
+        {
+            using var db = new NorthwindDb();
+            int affectedCount = 1;
+            //Recuperar o primeiro produto que atender ao nome especificado e atualizar seu preço:
+            /*var produto = db.Produtos.First(p => p.Nome.StartsWith(nome));
+            produto.Preco += valor;*/
+
+            var produtos = db.Produtos.Where(p => p.Nome.StartsWith(nome));
+            foreach(var p in produtos)
+            {
+                p.Preco += valor;
+                affectedCount++;
+            }            
+
+            int affected = db.SaveChanges();
+            return (affected == affectedCount);
+        }
+
+        private static int ExcluirProdutos(string nome)
+        {
+            using var db = new NorthwindDb();
+            var produtos = db.Produtos.Where(p => p.Nome.StartsWith(nome));
+            db.RemoveRange(produtos);
+            int affected = db.SaveChanges();
+            return affected;
+        }
+
+
     }
 }
