@@ -13,18 +13,39 @@ namespace NorthwindConsoleEF3
     {
         static void Main(string[] args)
         {
-            int affected = ExcluirProdutos("Geladeira");
-            WriteLine("{0} produtos excluídos.", affected);
-
+            ConsultarProdutosPorCategoria(false);
         }
 
-        private static void ConsultarCategorias()
+        private static void ListarCategorias(bool eagerLoading)
         {
             using var db = new NorthwindDb();
+            var loggerFactory = db.GetService<ILoggerFactory>();
+            loggerFactory.AddProvider(new ConsoleLoggerProvider());
+            WriteLine("Categorias:");
+            IQueryable<Categoria> categorias = db.Categorias;
+            if (eagerLoading)
+            {
+                categorias = db.Categorias.Include(c => c.Produtos);
+            }
+            foreach (var c in categorias)
+            {
+                WriteLine($"- {c.Nome}");
+            }
+        }
+
+        private static void ConsultarProdutosPorCategoria(bool eagerLoading)
+        {
+            using var db = new NorthwindDb();
+            var loggerFactory = db.GetService<ILoggerFactory>();
+            loggerFactory.AddProvider(new ConsoleLoggerProvider());
             WriteLine("Categorias e quantos produtos possuem:");
             //Uma consulta que recupera todas as categorias
             //e, para cada categoria, seus produtos relacionados:
-            IQueryable<Categoria> categorias = db.Categorias.Include(c => c.Produtos);
+            IQueryable<Categoria> categorias = db.Categorias; //Usa LazyLoading se o Proxy estiver configurado.
+            if (eagerLoading)
+            {
+                categorias = db.Categorias.Include(c => c.Produtos);
+            }
             foreach (var c in categorias)
             {
                 WriteLine($"{c.Nome} possui {c.Produtos.Count} produtos.");
@@ -81,7 +102,7 @@ namespace NorthwindConsoleEF3
             using var db = new NorthwindDb();
             WriteLine("{0,-3} {1,-40} {2,10} {3,5} {4}", "ID", "Produto", "Preço", "Estoque", "Descontinuado");
             var produtos = db.Produtos.OrderBy(p => p.Nome);
-            foreach(var p in produtos)
+            foreach (var p in produtos)
             {
                 WriteLine("{0:000} {1,-40} {2,10:R$#,##0.00} {3:00000} {4}", p.ProdutoId, p.Nome, p.Preco, p.Estoque, p.Descontinuado);
             }
@@ -96,11 +117,11 @@ namespace NorthwindConsoleEF3
             produto.Preco += valor;*/
 
             var produtos = db.Produtos.Where(p => p.Nome.StartsWith(nome));
-            foreach(var p in produtos)
+            foreach (var p in produtos)
             {
                 p.Preco += valor;
                 affectedCount++;
-            }            
+            }
 
             int affected = db.SaveChanges();
             return (affected == affectedCount);

@@ -8,6 +8,6 @@
         //Propriedade FK para Empregado
         public int EmpregadoId { get; set; }
         //Propriedade de navegação de CartaoAcesso para Empregado
-        public Empregado Empregado { get; set; }
+        public virtual Empregado Empregado { get; set; }
     }
 }

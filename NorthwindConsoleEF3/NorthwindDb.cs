@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NorthwindConsoleEF3.Modelos;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace NorthwindConsoleEF3
 {
@@ -18,7 +19,9 @@ namespace NorthwindConsoleEF3
             var connectionString = "Server=(localdb)\\MSSQLLocalDB;" +
                 "Database=NorthwindEF3;MultipleActiveResultSets=true;" +
                 "Trusted_Connection=true;";
-            optionsBuilder.UseSqlServer(connectionString);
+
+            //Chamar o método .UseLazyLoadingProxies() ANTES do método UseSqlServer(connectionString)
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -8,6 +8,6 @@ namespace NorthwindConsoleEF3.Modelos
         public string Descricao { get; set; }
 
         //Propriedade de navegação contendo a coleção de Empregados:
-        public ICollection<Empregado> Empregados { get; set; }
+        public virtual ICollection<Empregado> Empregados { get; set; }
     }
 }

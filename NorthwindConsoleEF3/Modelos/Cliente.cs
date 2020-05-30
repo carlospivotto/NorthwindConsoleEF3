@@ -7,6 +7,6 @@ namespace NorthwindConsoleEF3.Modelos
         public int Id { get; set; }
         public string NomeCompanhia { get; set; }
 
-        public ICollection<Pedido> Pedidos { get; set; }
+        public virtual ICollection<Pedido> Pedidos { get; set; }
     }
 }

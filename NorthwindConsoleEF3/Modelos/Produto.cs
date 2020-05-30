@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,6 +32,6 @@ namespace NorthwindConsoleEF3.Modelos
         // (https://docs.microsoft.com/pt-br/ef/core/modeling/shadow-properties)
         public virtual Fornecedor Fornecedor { get; set; }
 
-        public ICollection<DetalhamentoPedido> PedidosProduto { get; set; }
+        public virtual ICollection<DetalhamentoPedido> PedidosProduto { get; set; }
     }
 }

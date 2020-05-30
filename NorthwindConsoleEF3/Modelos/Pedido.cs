@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace NorthwindConsoleEF3.Modelos
@@ -10,8 +9,8 @@ namespace NorthwindConsoleEF3.Modelos
         public DateTime DataPedido { get; set; }
 
         public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; }
+        public virtual Cliente Cliente { get; set; }
 
-        public ICollection<DetalhamentoPedido> ProdutosPedido { get; set; }
+        public virtual ICollection<DetalhamentoPedido> ProdutosPedido { get; set; }
     }
 }
