@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NorthwindConsoleEF3.Modelos;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.Linq;
 using static System.Console;
 
@@ -13,7 +12,7 @@ namespace NorthwindConsoleEF3
     {
         static void Main(string[] args)
         {
-            ConsultarProdutosPorCategoria(false);
+            ConsultarProdutosPorCategoria();
         }
 
         private static void ListarCategorias(bool eagerLoading)
@@ -33,7 +32,7 @@ namespace NorthwindConsoleEF3
             }
         }
 
-        private static void ConsultarProdutosPorCategoria(bool eagerLoading)
+        private static void ConsultarProdutosPorCategoria()
         {
             using var db = new NorthwindDb();
             var loggerFactory = db.GetService<ILoggerFactory>();
@@ -41,18 +40,58 @@ namespace NorthwindConsoleEF3
             WriteLine("Categorias e quantos produtos possuem:");
             //Uma consulta que recupera todas as categorias
             //e, para cada categoria, seus produtos relacionados:
-            IQueryable<Categoria> categorias = db.Categorias; //Usa LazyLoading se o Proxy estiver configurado.
+            IQueryable<Categoria> categorias; //= db.Categorias; //Usa LazyLoading se o Proxy estiver configurado.
+
+            //Desabilita o LazyLoading nesta instância de banco
+            db.ChangeTracker.LazyLoadingEnabled = false;
+
+            Write("Habilitar carregamento antecipado (eager loading)? (S/N): ");
+            bool eagerLoading = (ReadKey().Key == System.ConsoleKey.S);
+            WriteLine();
+            bool explicitLoading = false;
             if (eagerLoading)
             {
                 categorias = db.Categorias.Include(c => c.Produtos);
             }
+            else
+            {
+                // Categorias *SEM* carregar Produtos devido à operação de desabilitar o LazyLoading.
+                categorias = db.Categorias;
+                Write("Habilitar carregamento explícito (explicit loading)? (S/N): ");
+                explicitLoading = (ReadKey().Key == System.ConsoleKey.S);
+                WriteLine();
+            }
+
             foreach (var c in categorias)
             {
-                WriteLine($"{c.Nome} possui {c.Produtos.Count} produtos.");
-                foreach (var p in c.Produtos)
+                if (explicitLoading)
                 {
-                    WriteLine($" — {p.Nome} ({p.Estoque} unidades no estoque)");
+                    Write($"Carregar explicitamente os produtos para {c.Nome}? (S/N): ");
+                    var opcao = ReadKey();
+                    WriteLine();
+                    if (opcao.Key == System.ConsoleKey.S)
+                    {
+                        //Carregar explicitamente os produtos
+                        //Entry(c) é o registro desta categoria c dentro da instância db
+                        var produtos = db.Entry(c).Collection(x => x.Produtos);
+
+                        if (!produtos.IsLoaded)
+                            produtos.Load();
+                    }
+                    WriteLine($"{c.Nome} possui {c.Produtos.Count} produtos.");
+                    foreach (var p in c.Produtos)
+                    {
+                        WriteLine($" — {p.Nome} ({p.Estoque} unidades no estoque)");
+                    }
+                } else if (eagerLoading)
+                {
+                    WriteLine($"{c.Nome} possui {c.Produtos.Count} produtos.");
+                    foreach (var p in c.Produtos)
+                    {
+                        WriteLine($" — {p.Nome} ({p.Estoque} unidades no estoque)");
+                    }
                 }
+
             }
         }
 
