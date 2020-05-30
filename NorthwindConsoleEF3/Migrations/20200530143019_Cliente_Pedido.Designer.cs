@@ -3,42 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NorthwindConsoleEF3;
 
 namespace NorthwindConsoleEF3.Migrations
 {
     [DbContext(typeof(NorthwindDb))]
-    partial class NorthwindDbModelSnapshot : ModelSnapshot
+    [Migration("20200530143019_Cliente_Pedido")]
+    partial class Cliente_Pedido
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.CartaoAcesso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Chave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmpregadoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmpregadoId")
-                        .IsUnique();
-
-                    b.ToTable("CartaoAcesso");
-                });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Categoria", b =>
                 {
@@ -182,15 +163,6 @@ namespace NorthwindConsoleEF3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Territorios");
-                });
-
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.CartaoAcesso", b =>
-                {
-                    b.HasOne("NorthwindConsoleEF3.Modelos.Empregado", "Empregado")
-                        .WithOne("CartaoAcesso")
-                        .HasForeignKey("NorthwindConsoleEF3.Modelos.CartaoAcesso", "EmpregadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Empregado", b =>

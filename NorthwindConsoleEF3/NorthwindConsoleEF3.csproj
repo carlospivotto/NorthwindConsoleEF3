@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200530142729_Cliente_Pedido.cs" />
+    <Compile Remove="Migrations\20200530142729_Cliente_Pedido.Designer.cs" />
+    <Compile Remove="Migrations\20200530145013_Empregado_CartaoAcesso.cs" />
+    <Compile Remove="Migrations\20200530145013_Empregado_CartaoAcesso.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>

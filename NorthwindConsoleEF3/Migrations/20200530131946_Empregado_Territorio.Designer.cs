@@ -3,42 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NorthwindConsoleEF3;
 
 namespace NorthwindConsoleEF3.Migrations
 {
     [DbContext(typeof(NorthwindDb))]
-    partial class NorthwindDbModelSnapshot : ModelSnapshot
+    [Migration("20200530131946_Empregado_Territorio")]
+    partial class Empregado_Territorio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.CartaoAcesso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Chave")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmpregadoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmpregadoId")
-                        .IsUnique();
-
-                    b.ToTable("CartaoAcesso");
-                });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Categoria", b =>
                 {
@@ -57,21 +38,6 @@ namespace NorthwindConsoleEF3.Migrations
                     b.HasKey("CategoriaId");
 
                     b.ToTable("Categorias");
-                });
-
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Cliente", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("NomeCompanhia")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Empregado", b =>
@@ -94,7 +60,7 @@ namespace NorthwindConsoleEF3.Migrations
 
                     b.HasIndex("TerritorioId");
 
-                    b.ToTable("Empregados");
+                    b.ToTable("Empregado");
                 });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Fornecedor", b =>
@@ -109,27 +75,7 @@ namespace NorthwindConsoleEF3.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fornecedores");
-                });
-
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Pedido", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DataPedido")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("Pedidos");
+                    b.ToTable("Fornecedor");
                 });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Produto", b =>
@@ -184,29 +130,11 @@ namespace NorthwindConsoleEF3.Migrations
                     b.ToTable("Territorios");
                 });
 
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.CartaoAcesso", b =>
-                {
-                    b.HasOne("NorthwindConsoleEF3.Modelos.Empregado", "Empregado")
-                        .WithOne("CartaoAcesso")
-                        .HasForeignKey("NorthwindConsoleEF3.Modelos.CartaoAcesso", "EmpregadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Empregado", b =>
                 {
                     b.HasOne("NorthwindConsoleEF3.Modelos.Territorio", null)
                         .WithMany("Empregados")
                         .HasForeignKey("TerritorioId");
-                });
-
-            modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Pedido", b =>
-                {
-                    b.HasOne("NorthwindConsoleEF3.Modelos.Cliente", "Cliente")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("NorthwindConsoleEF3.Modelos.Produto", b =>

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NorthwindConsoleEF3.Modelos
 {
+    [Table("Categorias")]
     public class Categoria
     {
         public int CategoriaId { get; set; }
