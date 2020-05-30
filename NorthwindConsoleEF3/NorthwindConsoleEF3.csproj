@@ -10,6 +10,8 @@
     <Compile Remove="Migrations\20200530142729_Cliente_Pedido.Designer.cs" />
     <Compile Remove="Migrations\20200530145013_Empregado_CartaoAcesso.cs" />
     <Compile Remove="Migrations\20200530145013_Empregado_CartaoAcesso.Designer.cs" />
+    <Compile Remove="Migrations\20200530170828_DetalhamentoPedido.cs" />
+    <Compile Remove="Migrations\20200530170828_DetalhamentoPedido.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

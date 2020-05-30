@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace NorthwindConsoleEF3.Modelos
 {
@@ -9,5 +11,7 @@ namespace NorthwindConsoleEF3.Modelos
 
         public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
+
+        public ICollection<DetalhamentoPedido> ProdutosPedido { get; set; }
     }
 }

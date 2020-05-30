@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NorthwindConsoleEF3;
 
 namespace NorthwindConsoleEF3.Migrations
 {
     [DbContext(typeof(NorthwindDb))]
-    partial class NorthwindDbModelSnapshot : ModelSnapshot
+    [Migration("20200530172254_DetalhamentoPedido_Alteracao")]
+    partial class DetalhamentoPedido_Alteracao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

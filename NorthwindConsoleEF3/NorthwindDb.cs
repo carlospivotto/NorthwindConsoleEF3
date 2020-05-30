@@ -50,6 +50,29 @@ namespace NorthwindConsoleEF3
                 .HasOne<CartaoAcesso>(e => e.CartaoAcesso)          // possui um CartaoAcesso
                 .WithOne(ca => ca.Empregado)                        // com um Empregado
                 .HasForeignKey<CartaoAcesso>(ca => ca.EmpregadoId); // e esta FK
+
+
+            //Configuração da chave primária de DetalhamentoPedido:
+            modelBuilder.Entity<DetalhamentoPedido>()
+                .HasKey(dp => new { dp.PedidoId, dp.ProdutoId });
+
+            //Poderíamos configurar manualmente as duas relações um para muitos 
+            //Note que o que não existe é uma convenção nxn.
+            //Mas nós utilizamos as convenções 1xn duas vezes.
+            //Assim, essas duas próximas operações não seriam necessárias.
+            //(Mas são uma alternativa)
+            modelBuilder.Entity<DetalhamentoPedido>()
+                .HasOne<Pedido>(dp => dp.Pedido)
+                .WithMany(pedido => pedido.ProdutosPedido)
+                .HasForeignKey(dp => dp.PedidoId);
+
+            modelBuilder.Entity<DetalhamentoPedido>()
+                .HasOne<Produto>(dp => dp.Produto)
+                .WithMany(produto => produto.PedidosProduto)
+                .HasForeignKey(dp => dp.ProdutoId);
+
+            //Pluralização do nome da tabela:
+            modelBuilder.Entity<DetalhamentoPedido>().ToTable("DetalhamentoPedidos");
         }
     }
 }

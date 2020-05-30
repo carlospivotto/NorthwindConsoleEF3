@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NorthwindConsoleEF3.Modelos
@@ -30,5 +32,7 @@ namespace NorthwindConsoleEF3.Modelos
         // mas ele será criado no banco como uma propriedade sombra 
         // (https://docs.microsoft.com/pt-br/ef/core/modeling/shadow-properties)
         public virtual Fornecedor Fornecedor { get; set; }
+
+        public ICollection<DetalhamentoPedido> PedidosProduto { get; set; }
     }
 }
