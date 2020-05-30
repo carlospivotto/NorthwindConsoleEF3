@@ -5,6 +5,8 @@ using NorthwindConsoleEF3.Modelos;
 using System;
 using System.Linq;
 using static System.Console;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Collections.Generic;
 
 namespace NorthwindConsoleEF3
 {
@@ -12,7 +14,38 @@ namespace NorthwindConsoleEF3
     {
         static void Main(string[] args)
         {
-            ConsultarProdutosPorCategoria();
+            CenarioDesconectado();
+        }
+
+        private static void UsandoSQLs()
+        {
+            var db = new NorthwindDb();
+            int cId = 2;
+            var produtos = db.Produtos
+                                .FromSqlRaw($"SELECT * from Produtos WHERE CategoriaId = {cId}")
+                                .Include(p => p.Categoria)
+                                .Include(p => p.Fornecedor)
+                                .ToList();
+
+            foreach (var p in produtos)
+            {
+                Write($"{p.Nome} | {p.Categoria.Nome} | {p.Fornecedor.NomeCompanhia}");
+                WriteLine();
+            }
+        }
+
+        private static void CenarioDesconectado()
+        {
+            // Cenário desconectado --> entidades desconectadas
+            var e1 = new Empregado { Nome = "Grace", Sobrenome = "Hopper" };
+            //var e2 = new Empregado { Id = 2, Nome = "Steve Gary", Sobrenome = "Wozniak" };
+            using var db = new NorthwindDb();
+            // 1. Anexar as entidades ao contexto
+            db.Add<Empregado>(e1);
+            //db.Update<Empregado>(e2); // Caso não exista, será inserido.
+            //db.Remove<Empregado>(e3);
+            //2. Chamar db.SaveChanges para inserir o registro;
+            db.SaveChanges();
         }
 
         private static void ListarCategorias(bool eagerLoading)
@@ -75,6 +108,7 @@ namespace NorthwindConsoleEF3
                         //Entry(c) é o registro desta categoria c dentro da instância db
                         var produtos = db.Entry(c).Collection(x => x.Produtos);
 
+                        //Se o conjunto de produtos não estava carregado (rastreado) pelo objeto db, passe a fazê-lo.
                         if (!produtos.IsLoaded)
                             produtos.Load();
                     }
@@ -83,7 +117,8 @@ namespace NorthwindConsoleEF3
                     {
                         WriteLine($" — {p.Nome} ({p.Estoque} unidades no estoque)");
                     }
-                } else if (eagerLoading)
+                }
+                else if (eagerLoading)
                 {
                     WriteLine($"{c.Nome} possui {c.Produtos.Count} produtos.");
                     foreach (var p in c.Produtos)
@@ -166,12 +201,25 @@ namespace NorthwindConsoleEF3
             return (affected == affectedCount);
         }
 
-        private static int ExcluirProdutos(string nome)
+        /*private static int ExcluirProdutos(string nome)
         {
             using var db = new NorthwindDb();
             var produtos = db.Produtos.Where(p => p.Nome.StartsWith(nome));
             db.RemoveRange(produtos);
             int affected = db.SaveChanges();
+            return affected;
+        }*/
+
+        private static int ExcluirProdutos(string nome)
+        {
+            using var db = new NorthwindDb();
+            //Marca o escopo de uma transação do objeto db:
+            using IDbContextTransaction t = db.Database.BeginTransaction();
+            WriteLine($"Isolamento de transação: {t.GetDbTransaction().IsolationLevel}");
+            var produtos = db.Produtos.Where(p => p.Nome.StartsWith(nome));
+            db.RemoveRange(produtos);
+            int affected = db.SaveChanges();
+            t.Commit();
             return affected;
         }
 

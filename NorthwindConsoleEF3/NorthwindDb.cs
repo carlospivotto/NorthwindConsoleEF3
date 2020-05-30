@@ -10,6 +10,7 @@ namespace NorthwindConsoleEF3
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Territorio> Territorios { get; set; }
+        public DbSet<Empregado> Empregados { get; set; }
 
         //Embora Fornecedor não esteja mapeado explicitamente como um DbSet<>, 
         //Produtos depende de seu mapeamento, que é portanto providenciado internamente.
